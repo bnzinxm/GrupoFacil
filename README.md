@@ -1,6 +1,6 @@
 # GrupoFácil
 
-![Logo do GrupoFácil](.app/assets/logo.png)
+![Logo do GrupoFácil](./app/assets/logo.png)
 
 **GrupoFácil** é um aplicativo inovador desenvolvido para ajudar professores a gerenciar e organizar grupos de alunos, atividades, e comunicação de maneira simples e eficiente. Com funcionalidades pensadas para facilitar a vida dos educadores, o **GrupoFácil** oferece uma plataforma prática para o controle de turmas e planos de ensino.
 
