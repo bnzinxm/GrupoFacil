@@ -1,4 +1,4 @@
-# ChatModal
+# Grupo Fácil
 
 ![Banner](markdown_assets/banner.jpg)
 
