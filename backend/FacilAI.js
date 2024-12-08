@@ -1,10 +1,11 @@
 const axios = require("axios");
+require("dotenv").config();
 
 // Endpoint da API Groq
 const groqApiUrl = "https://api.groq.com/v1/train";
 
 // Token de autenticação para a API Groq
-const apiToken = "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";
+const apiToken = process.env.GROQ_API_KEY;
 
 // Função para treinar a IA com a descrição do site
 async function treinarIA() {
