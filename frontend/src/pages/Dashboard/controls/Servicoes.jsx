@@ -3,7 +3,6 @@
 import React from 'react';
 
 const Servicos = () => {
-  // Lista de serviços com descrição e preços
   const servicos = [
     {
       id: 1,
@@ -29,48 +28,51 @@ const Servicos = () => {
   ];
 
   return (
-    <div className="bg-gray-50 min-h-screen p-8">
-      {/* Título da página */}
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-900">Seus Serviços</h1>
-        <p className="text-lg text-gray-600 mt-2">Aqui estão as utilidades que você pode utilizar.</p>
-      </div>
+    <div className="bg-gray-50 min-h-screen py-16 px-8">
+      {/* Cabeçalho */}
+      <header className="max-w-4xl mx-auto text-center mb-16">
+        <h1 className="text-4xl font-extrabold text-gray-800">Descubra Nossos Serviços</h1>
+        <p className="text-gray-600 text-lg mt-4">
+          Explore nossas ferramentas e torne sua rotina mais produtiva.
+        </p>
+      </header>
 
-      {/* Lista de Cards de Serviços */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Serviços */}
+      <main className="max-w-4xl mx-auto flex flex-col gap-12">
         {servicos.map((servico) => (
           <div
             key={servico.id}
-            className="bg-white shadow-md rounded-lg p-6 flex flex-col space-y-4 hover:shadow-lg transition-all duration-200"
+            className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
           >
-            {/* Nome do serviço */}
-            <h3 className="text-xl font-semibold text-gray-800">{servico.nome}</h3>
-            {/* Descrição do serviço */}
-            <p className="text-gray-600">{servico.descricao}</p>
-            {/* Preço do serviço */}
-            <div className="text-lg font-medium text-gray-800">{servico.preco}</div>
-            {/* Botão para ação, pode ser para mais detalhes ou iniciar o serviço */}
-            <div className="flex justify-center mt-auto">
+            <div className="w-full md:w-2/5 bg-gray-100 flex items-center justify-center p-6">
+              <span className="text-6xl text-blue-500 font-bold">
+                {servico.id}
+              </span>
+            </div>
+            <div className="w-full md:w-3/5 p-6">
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">{servico.nome}</h3>
+              <p className="text-gray-600 mb-4 text-base">{servico.descricao}</p>
+              <div className="text-lg font-medium text-gray-700 mb-6">{servico.preco}</div>
               <button
                 onClick={() => alert(`Iniciar serviço: ${servico.nome}`)}
-                className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors duration-300"
+                className="w-full bg-blue-500 text-white py-2 rounded-md font-semibold hover:bg-blue-600 transition-colors"
               >
                 Iniciar Serviço
               </button>
             </div>
           </div>
         ))}
-      </div>
+      </main>
 
-      {/* Botão para adquirir mais serviços */}
-      <div className="text-center mt-12">
+      {/* Botão adicional */}
+      <footer className="mt-20 text-center">
         <button
           onClick={() => alert('Redirecionar para adquirir mais serviços')}
-          className="bg-green-500 text-white px-8 py-4 rounded-lg hover:bg-green-600 transition-colors duration-300"
+          className="bg-blue-500 text-white px-10 py-3 rounded-full font-semibold hover:bg-blue-600 transition-colors shadow-md"
         >
           Adquirir Mais Serviços
         </button>
-      </div>
+      </footer>
     </div>
   );
 };

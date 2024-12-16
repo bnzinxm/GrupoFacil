@@ -163,6 +163,8 @@ function menu() {
     else if (escolha === "4") {
         getAlunos();
     }
+
+    menu();
 }
 
 menu();

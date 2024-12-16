@@ -2,12 +2,11 @@
 import { useState } from 'react';
 import Sidebar from './components/Sidebar'; // Sidebar da navegação
 import PainelUsuario from './components/PainelUsuario'; // Painel de usuário com nome e foto de perfil
-import Servicos from './controls/Servicoes'; // Card de Serviços
 import Agendamentos from './controls/Agendamentos'; // Card de Agendamentos
-import CardConsultas from './controls/Consultas'; // Card de Consultas
 import CardPerfil from './controls/Perfil'; // Card de Perfil
+import Principal from './controls/Principal'; // Control Principal
 import Cadastros from './controls/Cadastros';
-import SalaDeAula from './controls/SalaDeAula';
+import Sorteios from './controls/Sorteios';
 
 const Dashboard = () => {
   const [currentControl, setCurrentControl] = useState('servicos'); // Control inicial
@@ -21,18 +20,16 @@ const Dashboard = () => {
 
   const renderControl = () => {
     switch (currentControl) {
-      case 'servicos':
-        return <Servicos />;
       case 'agendamentos':
         return <Agendamentos />;
-      case 'consultas':
-        return <CardConsultas />;
       case 'perfil':
         return <CardPerfil />;
       case 'cadastros':
         return <Cadastros />
-      case 'saladeaula':
-        return <SalaDeAula />
+      case 'sorteios':
+        return <Sorteios />
+      case 'principal':
+        return <Principal />
       default:
         return <div>Selecione um controle</div>;
     }

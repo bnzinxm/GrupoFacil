@@ -5,7 +5,6 @@ import Alerts from "../../../components/Alert";
 const Alunos = () => {
   const [alunos, setAlunos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [alert, setAlert] = useState(null); // { type: "success" | "error" | "alert", message: string }
   const [newAluno, setNewAluno] = useState({
     nome: "",
     idade: "",

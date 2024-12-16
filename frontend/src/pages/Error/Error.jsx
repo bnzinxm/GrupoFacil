@@ -14,13 +14,13 @@ const Error = () => {
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
-          className="w-24 h-24 text-gray-600"
+          className="w-24 h-24 text-red-600" // Cor vermelha para erro
         >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth="2"
-            d="M9 9l10.5 10.5m0-13L9 9m1 9h10M2 12h10"
+            d="M6 18L18 6M6 6l12 12" // Forma de X, representando erro
           />
         </svg>
 

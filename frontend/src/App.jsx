@@ -11,6 +11,9 @@ import Dashboard from './pages/Dashboard/Dashboard'; // Importando a página do 
 import Error from './pages/Error/Error'; // Importando a página de erro
 import Planos from './pages/Planos/Planos';
 import ChatWidget from './components/ChatWidget'; // Importando o componente de Chat
+import Download from './pages/Download/Download'; // Importando a página de download
+import PoliticaDePrivacidade from './pages/PdP/PoliticaDePrivacidade'; // Importando a página de PdP
+import TermosDeUso from './pages/TermosDeUso/TermosDeUso'; // Importando a página de termos de uso
 
 const App = () => {
   const location = useLocation(); // Pega a rota atual
@@ -46,6 +49,15 @@ const App = () => {
 
         {/* Página de Assinaturas */}
         <Route path="/planos" element={<Planos />} />
+
+        {/* Página de Download*/}
+        <Route path="/download" element={<Download />}/>
+
+        {/* Página de Política de Privacidade*/}
+        <Route path="/politica-de-privacidade" element={<PoliticaDePrivacidade />}/>
+
+        {/* Página de Termos de Uso*/}
+        <Route path="/termos-de-uso" element={<TermosDeUso />}/>
 
         {/* Página de erro para rotas inexistentes */}
         <Route path="*" element={<Error />} />
