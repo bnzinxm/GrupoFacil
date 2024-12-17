@@ -1,0 +1,5 @@
+tests/node_modules/
+backend/.env
+.vscode
+backend/node_modules/
+tests/scratch/
