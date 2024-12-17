@@ -1,13 +1,16 @@
 {
   "name": "frontend",
   "private": true,
+  "homepage": "https://bnzinxm.github.io/GrupoFacil/",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-page -d dist"
   },
   "proxy": "http://localhost:5501",
   "dependencies": {
