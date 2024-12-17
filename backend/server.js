@@ -185,7 +185,8 @@ app.post('/api/login', async (req, res) => {
 // 1. Criar alunos
 app.post("/api/alunos", verifyToken, (req, res) => {
   const { nome, idade, serie, turno } = req.body;
-  const userId = req.user.id;
+
+  console.log('Dados recebidos:', req.body); // Log para depuração
 
   if (!nome || !idade || !serie || !turno) {
     return res.status(400).json({ message: "Todos os campos precisam estar preenchidos!" });
@@ -196,8 +197,9 @@ app.post("/api/alunos", verifyToken, (req, res) => {
   }
 
   const query = "INSERT INTO alunos (nome, idade, serie, turno, user_id) VALUES (?, ?, ?, ?, ?)";
-  db.query(query, [nome, idade, serie, turno, userId], (err, results) => {
+  db.query(query, [nome, idade, serie, turno, req.user.id], (err, results) => {
     if (err) {
+      console.error("Erro ao adicionar aluno:", err);
       return res.status(400).json({ message: "Erro ao adicionar aluno", error: err });
     }
     return res.status(201).json({ message: 'Aluno adicionado com sucesso!' });
@@ -212,11 +214,10 @@ app.delete("/api/alunos", verifyToken, (req, res) => {
     return res.status(400).json({ message: "O id do aluno precisa ser fornecido!" });
   }
 
-  const query = "DELETE FROM alunos WHERE id = ?"
-
-  db.query(quer, [id], (err, results) => {
+  const query = "DELETE FROM alunos WHERE id = ?";
+  db.query(query, [id], (err, results) => {
     if (err) {
-      return res.status(400).json({ message: "Erro ao deletar aluno.."});
+      return res.status(400).json({ message: "Erro ao deletar aluno.", error: err });
     }
 
     if (results.affectedRows === 0) {
@@ -228,23 +229,18 @@ app.delete("/api/alunos", verifyToken, (req, res) => {
 });
 
 // 3. Editar alunos
-app.put("api/alunos/:id", verifyToken, (req, res) => {
+app.put("/api/alunos/:id", verifyToken, (req, res) => {
   const { id } = req.params;
   const { nome, idade, serie, turno } = req.body;
-
-  if (!id) {
-    return res.status(400).json({ message: "O id do aluno precisa ser fornecido!" });
-  }
 
   if (!nome || !idade || !serie || !turno) {
     return res.status(400).json({ message: "Todos os campos são obrigatórios!" });
   }
 
   const query = "UPDATE alunos SET nome = ?, idade = ?, serie = ?, turno = ? WHERE id = ?";
-
   db.query(query, [nome, idade, serie, turno, id], (err, results) => {
     if (err) {
-      return res.status(400).json({ message: "Erro ao atualizar o aluno." });
+      return res.status(400).json({ message: "Erro ao atualizar o aluno.", error: err });
     }
 
     if (results.affectedRows === 0) {

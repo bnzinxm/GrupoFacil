@@ -14,6 +14,7 @@ import ChatWidget from './components/ChatWidget'; // Importando o componente de 
 import Download from './pages/Download/Download'; // Importando a página de download
 import PoliticaDePrivacidade from './pages/PdP/PoliticaDePrivacidade'; // Importando a página de PdP
 import TermosDeUso from './pages/TermosDeUso/TermosDeUso'; // Importando a página de termos de uso
+import Chat from './pages/Chat/Chat'; // Importar a página de chat
 
 const App = () => {
   const location = useLocation(); // Pega a rota atual
@@ -58,6 +59,9 @@ const App = () => {
 
         {/* Página de Termos de Uso*/}
         <Route path="/termos-de-uso" element={<TermosDeUso />}/>
+
+        {/* Página de Chat com comunidade */}
+        <Route path="/chat" element={<Chat />}/>
 
         {/* Página de erro para rotas inexistentes */}
         <Route path="*" element={<Error />} />

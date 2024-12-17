@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Alerts from "../../../components/Alert";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+toast.configure();
 
 const Alunos = () => {
   const [alunos, setAlunos] = useState([]);
@@ -12,63 +15,109 @@ const Alunos = () => {
     turno: "",
   });
   const [showModal, setShowModal] = useState(false);
-
-  // Carregar o módulo de Alertas feito por nós.
-  const alerts = new Alerts();
+  const [editando, setEditando] = useState(false); // Novo estado para verificar se estamos editando um aluno
+  const [alunoEditando, setAlunoEditando] = useState(null); // Estado para armazenar o aluno que está sendo editado
 
   // Carregar alunos do backend
   useEffect(() => {
-    const fetchAlunos = async () => {
+    const getAlunos = async () => {
       try {
-        const token = localStorage.getItem("token"); // Token JWT armazenado
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("Token ausente!");
+          return;
+        }
+
         const response = await axios.get("http://localhost:5501/api/alunos", {
           headers: {
-            Authorization: token, // Enviar o token no cabeçalho
+            Authorization: token,
           },
         });
+
         setAlunos(response.data);
-        alerts.setAlertText("Aluno carregado com sucesso!");
-        alerts.openAlert("showSuccess");
-      } catch (error) {
-        console.error("Erro ao buscar alunos:", error.response?.data || error);
-        alerts.setAlertText("Falha ao carregar alunos. Verifique sua conexão e tente novamente!");
-        alerts.openAlert("showError");
-      } finally {
+        setLoading(false);
+      } catch (err) {
+        toast.error("Erro ao tentar carregar os alunos. Verifique sua conexão ou backend.");
+        console.error("Erro ao carregar alunos: ", err);
         setLoading(false);
       }
     };
 
-    fetchAlunos();
+    getAlunos();
   }, []);
 
-  // Adicionar aluno
-  const handleAddAluno = async () => {
+  // Adicionar ou editar aluno
+  const handleSaveAluno = async () => {
     if (!newAluno.nome || !newAluno.idade || !newAluno.serie || !newAluno.turno) {
-      alert("Preencha todos os campos!");
-      alerts.setAlertText("Por favor, preencha todos os campos!");
-      alerts.showAlert("showWarning");
+      toast.warning("Preencha todos os campos antes de continuar.");
       return;
     }
 
     try {
       const token = localStorage.getItem("token");
-      await axios.post(
-        "http://localhost:5501/api/alunos",
-        newAluno,
-        {
-          headers: { Authorization: token },
-        }
-      );
-      setAlunos([...alunos, newAluno]); // Atualizar lista localmente
+      if (!token) {
+        toast.error("Token ausente. Faça login novamente.");
+        return;
+      }
+
+      let response;
+
+      if (editando) {
+        // Edição
+        response = await axios.put(
+          `http://localhost:5501/api/alunos/${alunoEditando.id}`,
+          newAluno,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        const updatedAlunos = alunos.map((aluno) =>
+          aluno.id === alunoEditando.id ? response.data : aluno
+        );
+        setAlunos(updatedAlunos);
+        toast.success("Aluno editado com sucesso!");
+      } else {
+        // Criação
+        response = await axios.post("http://localhost:5501/api/alunos", newAluno, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        setAlunos([...alunos, response.data]);
+        toast.success("Aluno criado com sucesso!");
+      }
+
       setNewAluno({ nome: "", idade: "", serie: "", turno: "" });
-      alerts.setAlertText("Aluno adicionado com sucesso!");
-      alerts.showAlert("showSuccess");
       setShowModal(false);
-      alert("Aluno adicionado com sucesso!");
-    } catch (error) {
-      console.error("Erro ao adicionar aluno:", error.response?.data || error);
-      alert("Erro ao adicionar aluno!");
+      setEditando(false); // Resetar modo de edição
+      setAlunoEditando(null); // Limpar aluno sendo editado
+    } catch (err) {
+      toast.error("Erro ao salvar aluno. Verifique os dados ou tente novamente.");
+      console.error("Erro ao salvar aluno: ", err);
     }
+  };
+
+  // Abrir modal para editar aluno
+  const handleEditAluno = (aluno) => {
+    setNewAluno({
+      nome: aluno.nome,
+      idade: aluno.idade,
+      serie: aluno.serie,
+      turno: aluno.turno,
+    });
+    setAlunoEditando(aluno);
+    setEditando(true);
+    setShowModal(true);
+  };
+
+  // Abrir modal para adicionar aluno
+  const handleOpenModal = () => {
+    setNewAluno({ nome: "", idade: "", serie: "", turno: "" });
+    setShowModal(true);
+    setEditando(false);
+    setAlunoEditando(null);
   };
 
   if (loading) {
@@ -88,6 +137,7 @@ const Alunos = () => {
               <th className="px-4 py-2 text-left">Idade</th>
               <th className="px-4 py-2 text-left">Série</th>
               <th className="px-4 py-2 text-left">Turno</th>
+              <th className="px-4 py-2 text-left">Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -97,17 +147,25 @@ const Alunos = () => {
                 <td className="px-4 py-2">{aluno.idade}</td>
                 <td className="px-4 py-2">{aluno.serie}</td>
                 <td className="px-4 py-2">{aluno.turno}</td>
+                <td className="px-4 py-2">
+                  <button
+                    onClick={() => handleEditAluno(aluno)}
+                    className="text-blue-600 hover:text-blue-800"
+                  >
+                    Editar
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* Modal para adicionar aluno */}
+      {/* Modal para adicionar ou editar aluno */}
       {showModal && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-md w-96">
-            <h2 className="text-2xl font-semibold mb-4">Adicionar Aluno</h2>
+            <h2 className="text-2xl font-semibold mb-4">{editando ? "Editar Aluno" : "Adicionar Aluno"}</h2>
             <div className="mb-4">
               <label className="block text-sm font-medium">Nome</label>
               <input
@@ -146,10 +204,10 @@ const Alunos = () => {
             </div>
             <div className="flex justify-end">
               <button
-                onClick={handleAddAluno}
+                onClick={handleSaveAluno}
                 className="bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700"
               >
-                Adicionar
+                {editando ? "Salvar Alterações" : "Adicionar"}
               </button>
               <button
                 onClick={() => setShowModal(false)}
@@ -164,7 +222,7 @@ const Alunos = () => {
 
       {/* Botão para abrir o modal */}
       <button
-        onClick={() => setShowModal(true)}
+        onClick={handleOpenModal}
         className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-md hover:bg-blue-700"
       >
         Adicionar Aluno
